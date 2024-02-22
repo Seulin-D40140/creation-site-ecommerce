@@ -8,13 +8,13 @@ let games = [];
 //class........................................................................................................................
 class Game //class
 {
- constructor( name , price , cat , plateform)
- {
-    this.name = name
-    this.price = price
-    this.cat = cat
-    this.plateform = plateform
- }
+    constructor( name , price , cat , plateform)
+    {
+        this.name = name
+        this.price = price
+        this.cat = cat
+        this.plateform = plateform
+    }
 
 }
 
@@ -34,8 +34,8 @@ let pokemon = new Game("Pokemon or" , 29 , "Rpg" , "Nintendo")
 let zeldabotw = new Game("Zelda breath of the wild" , 49 , "Action/aventure Rpg" , "Nintendo")
 let zeldatp = new Game("Zelda twilight princess" , 15 , "Action/aventure Rpg" , "Nintendo")
 
-let codmw3 = new Game("Call of mw3" , 120 , "fps" , "Playstation Xbox Nintendo")
-let codbo4 = new Game("Call of bo4" , 25 , "fps" , "Playstation Xbox Nintendo")
+let codmw3 = new Game("Call of mw3" , 120 , "Fps" , "Playstation Xbox Nintendo")
+let codbo4 = new Game("Call of bo4" , 25 , "Fps" , "Playstation Xbox Nintendo")
 let nfs = new Game("Need for speed unbound" , 70 , "course" , "Playstation Xbox Nintendo")
 let thecrew = new Game("The crew motorfest" , 12 , "course" , "Playstation Xbox")
 let forza3 = new Game("Forza 3" , 12 , "course" , "Xbox")
@@ -93,24 +93,32 @@ function createCard(name , price)
             </div>`
 }
 
+//code.............................................................................................................................................................
+
 //afficher toutes les card des jeux...................................................................................................
 games.forEach(game => principaldiv.innerHTML += createCard(game.name , game.price))
 
-//recupere toutes les card 
-let cardjeux = document.querySelectorAll('.card')
-
+// fonction trie par categorie
 categories.forEach( cat => cat.addEventListener("click" , 
 function()
+{
+    principaldiv.innerHTML = ""
+
+    games.forEach(game => { 
     {
-            games.forEach( game => {
-                if(!game.plateform.includes(cat.innerHTML))
-                {
-                    cardjeux.forEach( card => {if(card.innerText.includes(game.name))
-                        { 
-                            card.classList.add('hidden')
-                        }})
-                }})
-    }
-))
+        if(game.plateform.includes(cat.innerText) || game.cat.includes(cat.innerText))
+        {
+            console.log(game)
+            principaldiv.innerHTML += createCard(game.name , game.price)
+        }
+        else if (cat.innerText == "All")
+        {
+            principaldiv.innerHTML += createCard(game.name , game.price)
+        }
+    }})
+}))
+
+
+
 
 
