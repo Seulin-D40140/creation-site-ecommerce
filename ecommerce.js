@@ -3,13 +3,13 @@
 
 let categories = document.querySelectorAll('.cat')
 let principaldiv = document.querySelector('.principalcontainer')
-let cartdiv = document.querySelector('cartul')
+let cartdiv = document.querySelector('.cartdivlist')
+let subtotal = document.querySelector('#price')
 let buttonaddtocart = null
 let games = [];
-
+let totalprice = 0
 
 //class........................................................................................................................
-
 class Game //class
 {
     constructor( id ,name , price , cat , plateform )
@@ -96,25 +96,8 @@ function createCardaddtodiv(game , color)
                                     </div>
                                 </div>`
 
-    // const addbtn = creatbtn(game)
-    // const btns = document.querySelector(`.btn-${game.id}`)
-    // btns.appendChild(addbtn)
+
 }
-
-// function creatbtn(game)
-// {
-//     let btnelement = document.createElement('button')
-//     btnelement.classList.add("addcart" , "w-24")
-//     let img = document.createElement('img')
-//     img.setAttribute("src" , "img/others/addtocart.png")
-//     btnelement.appendChild(img)
-
-//     btnelement.addEventListener('click' , function(){
-//         console.log(game)
-//     })
-
-//     return btnelement
-// }
 
 //afficher toutes les card des jeux...................................................................................................
 
@@ -126,7 +109,7 @@ games.forEach(game => {
 
                         createCardaddtodiv(game , color)
                         buttonaddtocart = document.querySelectorAll('.addcart')
-                        eventbtnaddcart(buttonaddtocart , game)
+                        eventbtnaddcart(buttonaddtocart)
                       })
 
 //fonction trie par categorie.........................................................................................................
@@ -147,7 +130,7 @@ function()
             
             createCardaddtodiv(game , color)
             buttonaddtocart = document.querySelectorAll('.addcart')
-            eventbtnaddcart(buttonaddtocart , game)
+            eventbtnaddcart(buttonaddtocart)
         }
         else if (cat.innerText == "All")
         {
@@ -157,7 +140,7 @@ function()
             
             createCardaddtodiv(game , color)
             buttonaddtocart = document.querySelectorAll('.addcart')
-            eventbtnaddcart(buttonaddtocart , game)
+            eventbtnaddcart(buttonaddtocart)
         }
     }})
 }))
@@ -170,28 +153,40 @@ function()
 
 function cartcard(game)
 {
-    return `<li class="flex py-6">
-                <div class="ml-4 flex flex-1 flex-col">
-                    <div>
-                        <div class="flex justify-between text-base font-medium text-gray-900">
-                        <h3>
-                            <a href="#">${game.name}</a>
-                        </h3>
-                        <p class="ml-4">$${game.price}</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-1 items-end justify-between text-sm">
-                        <p class="text-gray-500">Qty 1</p>
+     return `<li class="flex py-6">
+                            <div class="ml-4 flex flex-1 flex-col">
+                                <div>
+                                    <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3>
+                                        <a href="#">${game.name}</a>
+                                    </h3>
+                                    <p class="ml-4">$${game.price}</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-1 items-end justify-between text-sm">
+                                    <p class="text-gray-500">Qty 1</p>
 
-                        <div class="flex">
-                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            </li>`
+                                    <div class="flex">
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>`
 }
 
-function eventbtnaddcart(btns , game)
+function eventbtnaddcart(btns)
 {
-    btns.forEach( btn => btn.addEventListener("click" , function(){console.log(game)}))
+    btns.forEach( btn => btn.addEventListener("click" , 
+        function()
+        {
+            games.forEach( game => 
+                {
+                    if (game.id == btn.id)
+                    {   price += Number(game.price)
+                        cartdiv.innerHTML += cartcard(game)
+                        subtotal.innerText = ` $ ${price}`
+                        console.log()
+                    }
+                })
+        }))
 }
