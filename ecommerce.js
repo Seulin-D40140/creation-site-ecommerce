@@ -1,17 +1,20 @@
 
 //variables....................................................................................................................
 
-let categories = document.querySelectorAll('.cat')
+let categorieDiv = document.querySelectorAll('.cat')
 let principaldiv = document.querySelector('.principalcontainer')
 let cartdiv = document.querySelector('.cartdivlist')
-let subtotal = document.querySelector('#price')
+let subtotalDiv = document.querySelector('#price')
+let checkoutBtnDiv = document.querySelector('.checkoutbtn')
+
 let buttonaddtocart = null
 let buttonremovecart = null
-let checkoutbtn = document.querySelector('.checkoutbtn')
+
 let games = [];
 let totalprice = 0
 
 //class........................................................................................................................
+
 class Game //class
 {
     constructor( id ,name , price , cat , plateform , quantity)
@@ -117,7 +120,7 @@ games.forEach(game => {
 
 //fonction trie par categorie.........................................................................................................
 
-categories.forEach( cat => cat.addEventListener("click" , 
+categorieDiv.forEach( catBtn => catBtn.addEventListener("click" , 
 function()
 {
     principaldiv.innerHTML = ""
@@ -125,7 +128,7 @@ function()
     games.forEach(game => { 
     {
         let color = ""
-        if(game.plateform.includes(cat.innerText) || game.cat.includes(cat.innerText))
+        if(game.plateform.includes(catBtn.innerText) || game.cat.includes(catBtn.innerText))
         {
             game.plateform == 'Playstation' ? color = 'blue' : 
             game.plateform == 'Xbox' ? color = 'green' : 
@@ -135,7 +138,7 @@ function()
             buttonaddtocart = document.querySelectorAll('.addcart')
             eventbtnaddcart(buttonaddtocart)
         }
-        else if (cat.innerText == "All")
+        else if (catBtn.innerText == "All")
         {
             game.plateform == 'Playstation' ? color = 'blue' : 
             game.plateform == 'Xbox' ? color = 'green' : 
@@ -152,7 +155,7 @@ function()
 
 //code panier............................................................................................................................................................
 
-//fonction card panier .....................................................................................................
+//fonction card div panier .....................................................................................................
 
 function cartcard(game)
 {
@@ -182,22 +185,23 @@ let cart = []
 
 function eventbtnaddcart(btns)
 {
-    btns.forEach( btn => btn.addEventListener("click" , 
+    btns.forEach( btnAdd => btnAdd.addEventListener("click" , 
     function()
     {
         games.forEach( game => 
             {
-                if (game.id == btn.id)
+                if (game.id == btnAdd.id)
                 {   
                     
-                    let gamexist = cart.find(g => g.id == game.id)
+                    let GameExistInArrayCart = cart.find(g => g.id == game.id)
                     
-                    if(gamexist)
+                    if(GameExistInArrayCart)
                     {
-                        console.log("deja")
-                        gamexist.quantity++
-                        gamexist.price = game.price * gamexist.quantity
-
+                        if(GameExistInArrayCart.quantity < 10)
+                        {
+                            GameExistInArrayCart.quantity++
+                        }
+                        
                         buttonremovecart = document.querySelectorAll('.removebtn')
                         eventbtnremovecart(buttonremovecart)
                     }
@@ -206,23 +210,21 @@ function eventbtnaddcart(btns)
                         cart.push(game)
                         
                     }
-                    buttonremovecart = document.querySelectorAll('.removebtn')
-                    let totalcart = cart.reduce( (sum , e) => {return sum += e.price},0)
+                    
+                    let  totalcart = cart.reduce( (sum , e) => {return sum += e.price * e.quantity},0)
 
                     totalprice = totalcart
-                    subtotal.innerHTML = ""
-                    subtotal.innerText = ` $ ${totalprice}`
+
+                    subtotalDiv.innerHTML = ""
+                    subtotalDiv.innerText = ` $ ${totalprice}`
 
                     cartdiv.innerHTML = ""
                     cart.forEach( game => {cartcard(game)})
 
                     buttonremovecart = document.querySelectorAll('.removebtn')
                     eventbtnremovecart(buttonremovecart)
-                    
                 }
-                
             })
-            cart.forEach( g => {console.log(g)})
     }))
 }
 
@@ -231,47 +233,65 @@ function eventbtnaddcart(btns)
 
 function eventbtnremovecart(btns)
 {
-    btns.forEach( btn => btn.addEventListener("click" , 
+    btns.forEach( btnRmv => btnRmv.addEventListener("click" , 
     function()
     { 
-        let findgame = cart.find(g => g.id == btn.id)
+        let findGameInCart = cart.find(g => g.id == btnRmv.id)
             
-        if( findgame && findgame.quantity > 1 )
+        if( findGameInCart && findGameInCart.quantity > 1 )
                 {
-                    findgame.quantity -= 1
+                    findGameInCart.quantity -= 1
 
                     cartdiv.innerHTML = ""
                     cart.forEach( game => {cartcard(game)})
-
+                    totalprice -= findGameInCart.price
+                    subtotalDiv.innerHTML = ""
+                    subtotalDiv.innerText = ` $ ${totalprice}`
                     buttonremovecart = document.querySelectorAll('.removebtn')
                     eventbtnremovecart(buttonremovecart)
                 }
-                else if ( findgame && findgame.quantity == 1)
+                else if ( findGameInCart && findGameInCart.quantity == 1)
                 {
-                    cart.splice(cart.indexOf(findgame) , 1)
+                    cart.splice(cart.indexOf(findGameInCart) , 1)
                     cartdiv.innerHTML = ""
                     cart.forEach( game => {cartcard(game)})
-
+                    totalprice -= findGameInCart.price
+                    subtotalDiv.innerHTML = ""
+                    subtotalDiv.innerText = ` $ ${totalprice}`
                     buttonremovecart = document.querySelectorAll('.removebtn')
                     eventbtnremovecart(buttonremovecart)
                 }
                 if(cart.length == 0 )
                 {
                     cartdiv.innerHTML = "panier vide"
-                    subtotal.innerHTML = " $ 0"
+                    subtotalDiv.innerHTML = " $ 0"
                 }
-            
+
+                totalprice = totalcart
+                subtotalDiv.innerHTML = ""
+                subtotalDiv.innerText = ` $ ${totalprice}`
     }))
 }
 
-//function commande valider reset panier.......................................................................................................................
+//function commande valider panier / panier vide.......................................................................................................................
 
-checkoutbtn.addEventListener("click" , 
+checkoutBtnDiv.addEventListener("click" , 
 function()
 {
-    cartdiv.innerHTML = ""
-    subtotal.innerHTML = ""
-    cartdiv.innerHTML = "panier vide"
-    subtotal.innerHTML = " $ 0"
-    totalprice = 0
+    if(cart.length == 0)
+    {
+        window.alert("votre panier est vide")
+    }
+    else
+    {
+        window.alert("**----- VALIDEZ votre panier -----**")
+        
+        cart.forEach( cartgame => cartgame.quantity = 1)
+        cart.length = 0
+        cartdiv.innerHTML = ""
+        subtotalDiv.innerHTML = ""
+        cartdiv.innerHTML = "panier vide"
+        subtotalDiv.innerHTML = " $ 0"
+        totalprice = 0
+    }
 })
