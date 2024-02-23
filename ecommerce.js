@@ -6,46 +6,49 @@ let principaldiv = document.querySelector('.principalcontainer')
 let cartdiv = document.querySelector('.cartdivlist')
 let subtotal = document.querySelector('#price')
 let buttonaddtocart = null
+let buttonremovecart = null
+let checkoutbtn = document.querySelector('.checkoutbtn')
 let games = [];
 let totalprice = 0
 
 //class........................................................................................................................
 class Game //class
 {
-    constructor( id ,name , price , cat , plateform )
+    constructor( id ,name , price , cat , plateform , quantity)
     {
         this.id = id
         this.name = name
         this.price = price
         this.cat = cat
         this.plateform = plateform
+        this.quantity = quantity
     }
 
 }
 
 //instanciation article..........................................................................................................
 
-let tlou1 = new Game(1 , "The last of us1" , 60 , "Action/aventure" , "Playstation")
-let tlou2 = new Game(2 , "The last of us2" , 90 , "Action/aventure" , "Playstation")
-let hzd = new Game(3 , "Horizon zero dawn" , 49 ,"Action/aventure" , "Playstation")
-let daysgone = new Game(4 , "Days gone" , 35 , "Action/aventure" , "Playstation")
+let tlou1 = new Game(1 , "The last of us1" , 60 , "Action/aventure" , "Playstation" , 1)
+let tlou2 = new Game(2 , "The last of us2" , 90 , "Action/aventure" , "Playstation" , 1)
+let hzd = new Game(3 , "Horizon zero dawn" , 49 ,"Action/aventure" , "Playstation" , 1)
+let daysgone = new Game(4 , "Days gone" , 35 , "Action/aventure" , "Playstation" , 1)
 
-let halo = new Game(5 , "Halo" , 29 , "Action/aventure" , "Xbox")
-let Gow = new Game(6 , "Gear of war" , 59 , "Action/aventure" , "Xbox")
-let fh4 = new Game(7 , "Forza 4" , 49 , "course" , "Xbox")
-let fh5 = new Game(8 , "Forza 5" , 55 , "course" , "Xbox")
+let halo = new Game(5 , "Halo" , 29 , "Action/aventure" , "Xbox" , 1)
+let Gow = new Game(6 , "Gear of war" , 59 , "Action/aventure" , "Xbox" , 1)
+let fh4 = new Game(7 , "Forza 4" , 49 , "course" , "Xbox" , 1)
+let fh5 = new Game(8 , "Forza 5" , 55 , "course" , "Xbox" , 1)
 
-let mario = new Game(9 , "Mario" , 19 , "Action/aventure" , "Nintendo")
-let pokemon = new Game(10 , "Pokemon or" , 29 , "Rpg" , "Nintendo")
-let zeldabotw = new Game(11 , "Zelda breath of the wild" , 49 , "Action/aventure Rpg" , "Nintendo")
-let zeldatp = new Game(12 , "Zelda twilight princess" , 15 , "Action/aventure Rpg" , "Nintendo")
+let mario = new Game(9 , "Mario" , 19 , "Action/aventure" , "Nintendo" , 1)
+let pokemon = new Game(10 , "Pokemon or" , 29 , "Rpg" , "Nintendo" , 1)
+let zeldabotw = new Game(11 , "Zelda breath of the wild" , 49 , "Action/aventure Rpg" , "Nintendo" , 1)
+let zeldatp = new Game(12 , "Zelda twilight princess" , 15 , "Action/aventure Rpg" , "Nintendo" , 1)
 
-let codmw3 = new Game(13 , "Call of mw3" , 120 , "Fps" , "Playstation Xbox Nintendo")
-let codbo4 = new Game(14 , "Call of bo4" , 25 , "Fps" , "Playstation Xbox Nintendo")
-let nfs = new Game(15 , "Need for speed unbound" , 70 , "course" , "Playstation Xbox Nintendo")
-let thecrew = new Game(16 , "The crew motorfest" , 12 , "course" , "Playstation Xbox")
-let forza3 = new Game(17 , "Forza 3" , 12 , "course" , "Xbox")
-let thedivision = new Game(18 , "The division 2" , 20 , "Rpg" , "Playstation Xbox Nintendo")
+let codmw3 = new Game(13 , "Call of mw3" , 120 , "Fps" , "Playstation Xbox Nintendo" , 1)
+let codbo4 = new Game(14 , "Call of bo4" , 25 , "Fps" , "Playstation Xbox Nintendo" , 1)
+let nfs = new Game(15 , "Need for speed unbound" , 70 , "course" , "Playstation Xbox Nintendo" , 1)
+let thecrew = new Game(16 , "The crew motorfest" , 12 , "course" , "Playstation Xbox" , 1)
+let forza3 = new Game(17 , "Forza 3" , 12 , "course" , "Xbox" , 1)
+let thedivision = new Game(18 , "The division 2" , 20 , "Rpg" , "Playstation Xbox Nintendo" , 1)
 
 
 //ajout objet/article tableau.....................................................................................................
@@ -89,7 +92,7 @@ function createCardaddtodiv(game , color)
                                         <p class="text-base text-neutral-600 dark:text-neutral-200 min-h-20">
                                         ${game.name}
                                         </p>
-                                        <div class="btn-${game.id} flex justify-between">
+                                        <div class=" flex justify-between">
                                             <div><p>prix : ${game.price}€</p></div>
                                             <button id=${game.id} class="addcart w-24"><img src="img/others/addtocart.png" alt=""></button>
                                         </div>
@@ -153,7 +156,7 @@ function()
 
 function cartcard(game)
 {
-     return `<li class="flex py-6">
+     cartdiv.innerHTML += `<li class="flex py-6">
                             <div class="ml-4 flex flex-1 flex-col">
                                 <div>
                                     <div class="flex justify-between text-base font-medium text-gray-900">
@@ -164,29 +167,111 @@ function cartcard(game)
                                     </div>
                                 </div>
                                 <div class="flex flex-1 items-end justify-between text-sm">
-                                    <p class="text-gray-500">Qty 1</p>
+                                    <p class="text-gray-500">Qty ${game.quantity}</p>
 
                                     <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                    <button type="button" id=${game.id} class="removebtn font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
                                     </div>
                                 </div>
                             </div>
                         </li>`
 }
 
+// fonction button add to cart ..............................................................................................................
+let cart = []
+
 function eventbtnaddcart(btns)
 {
     btns.forEach( btn => btn.addEventListener("click" , 
-        function()
-        {
-            games.forEach( game => 
-                {
-                    if (game.id == btn.id)
-                    {   price += Number(game.price)
-                        cartdiv.innerHTML += cartcard(game)
-                        subtotal.innerText = ` $ ${price}`
-                        console.log()
+    function()
+    {
+        games.forEach( game => 
+            {
+                if (game.id == btn.id)
+                {   
+                    
+                    let gamexist = cart.find(g => g.id == game.id)
+                    
+                    if(gamexist)
+                    {
+                        console.log("deja")
+                        gamexist.quantity++
+                        gamexist.price = game.price * gamexist.quantity
+
+                        buttonremovecart = document.querySelectorAll('.removebtn')
+                        eventbtnremovecart(buttonremovecart)
                     }
-                })
-        }))
+                    else
+                    {
+                        cart.push(game)
+                        
+                    }
+                    buttonremovecart = document.querySelectorAll('.removebtn')
+                    let totalcart = cart.reduce( (sum , e) => {return sum += e.price},0)
+
+                    totalprice = totalcart
+                    subtotal.innerHTML = ""
+                    subtotal.innerText = ` $ ${totalprice}`
+
+                    cartdiv.innerHTML = ""
+                    cart.forEach( game => {cartcard(game)})
+
+                    buttonremovecart = document.querySelectorAll('.removebtn')
+                    eventbtnremovecart(buttonremovecart)
+                    
+                }
+                
+            })
+            cart.forEach( g => {console.log(g)})
+    }))
 }
+
+
+//function button remove from cart ...........................................................................................................
+
+function eventbtnremovecart(btns)
+{
+    btns.forEach( btn => btn.addEventListener("click" , 
+    function()
+    { 
+        let findgame = cart.find(g => g.id == btn.id)
+            
+        if( findgame && findgame.quantity > 1 )
+                {
+                    findgame.quantity -= 1
+
+                    cartdiv.innerHTML = ""
+                    cart.forEach( game => {cartcard(game)})
+
+                    buttonremovecart = document.querySelectorAll('.removebtn')
+                    eventbtnremovecart(buttonremovecart)
+                }
+                else if ( findgame && findgame.quantity == 1)
+                {
+                    cart.splice(cart.indexOf(findgame) , 1)
+                    cartdiv.innerHTML = ""
+                    cart.forEach( game => {cartcard(game)})
+
+                    buttonremovecart = document.querySelectorAll('.removebtn')
+                    eventbtnremovecart(buttonremovecart)
+                }
+                if(cart.length == 0 )
+                {
+                    cartdiv.innerHTML = "panier vide"
+                    subtotal.innerHTML = " $ 0"
+                }
+            
+    }))
+}
+
+//function commande valider reset panier.......................................................................................................................
+
+checkoutbtn.addEventListener("click" , 
+function()
+{
+    cartdiv.innerHTML = ""
+    subtotal.innerHTML = ""
+    cartdiv.innerHTML = "panier vide"
+    subtotal.innerHTML = " $ 0"
+    totalprice = 0
+})
