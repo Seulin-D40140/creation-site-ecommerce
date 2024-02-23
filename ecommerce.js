@@ -6,6 +6,7 @@ let principaldiv = document.querySelector('.principalcontainer')
 let cartdiv = document.querySelector('.cartdivlist')
 let subtotalDiv = document.querySelector('#price')
 let checkoutBtnDiv = document.querySelector('.checkoutbtn')
+let emptyingCart = document.querySelector('.deletecart')
 
 let buttonaddtocart = null
 let buttonremovecart = null
@@ -294,4 +295,18 @@ function()
         subtotalDiv.innerHTML = " $ 0"
         totalprice = 0
     }
+})
+
+// vider tout le panier ..............................................................................................................................................
+
+emptyingCart.addEventListener("click" , 
+function()
+{
+        cart.forEach( cartgame => cartgame.quantity = 1)
+        cart.length = 0
+        cartdiv.innerHTML = ""
+        subtotalDiv.innerHTML = ""
+        cartdiv.innerHTML = "panier vide"
+        subtotalDiv.innerHTML = " $ 0"
+        totalprice = 0
 })
