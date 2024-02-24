@@ -77,18 +77,9 @@ add(nfs)
 add(pokemon)
 
 function add(obj)
-{ //fonction ajout article
+{ //fonction ajout article au tableau
     games.push(obj)
 }
-
-//filtre tableau de jeux........................................................................................................................
-
-function filterGame ( btncat )
-{
-    let gamefilter = games.filter((gamecat) => gamecat.plateform.includes(btncat.innerText) || gamecat.cat.includes(btncat.innerText))
-    return gamefilter
-}
-
 
 //fonction card div principal....................................................................................................................
 
@@ -127,6 +118,14 @@ games.forEach(game => {
                         buttonaddtocart = document.querySelectorAll('.addcart')
                         eventbtnaddcart(buttonaddtocart)
                       })
+
+//filtre tableau de jeux........................................................................................................................
+
+function filterGame ( btncat )
+{
+    let gamefilter = games.filter((gamecat) => gamecat.plateform.includes(btncat.innerText) || gamecat.cat.includes(btncat.innerText))
+    return gamefilter
+}
 
 //fonction trie par categorie.........................................................................................................
 
@@ -200,7 +199,6 @@ function cartcard(game)
 }
 
 // fonction button add to cart ..............................................................................................................
-
 let cart = []
 
 function eventbtnaddcart(btns)
