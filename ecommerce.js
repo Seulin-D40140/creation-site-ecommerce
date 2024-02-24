@@ -39,8 +39,8 @@ let daysgone = new Game(4 , "Days gone" , 35 , "Action/aventure" , "Playstation"
 
 let halo = new Game(5 , "Halo" , 29 , "Action/aventure" , "Xbox" , 1)
 let Gow = new Game(6 , "Gear of war" , 59 , "Action/aventure" , "Xbox" , 1)
-let fh4 = new Game(7 , "Forza 4" , 49 , "course" , "Xbox" , 1)
-let fh5 = new Game(8 , "Forza 5" , 55 , "course" , "Xbox" , 1)
+let fh4 = new Game(7 , "Forza 4" , 49 , "Course" , "Xbox" , 1)
+let fh5 = new Game(8 , "Forza 5" , 55 , "Course" , "Xbox" , 1)
 
 let mario = new Game(9 , "Mario" , 19 , "Action/aventure" , "Nintendo" , 1)
 let pokemon = new Game(10 , "Pokemon or" , 29 , "Rpg" , "Nintendo" , 1)
@@ -49,8 +49,8 @@ let zeldatp = new Game(12 , "Zelda twilight princess" , 15 , "Action/aventure Rp
 
 let codmw3 = new Game(13 , "Call of mw3" , 120 , "Fps" , "Playstation Xbox Nintendo" , 1)
 let codbo4 = new Game(14 , "Call of bo4" , 25 , "Fps" , "Playstation Xbox Nintendo" , 1)
-let nfs = new Game(15 , "Need for speed unbound" , 70 , "course" , "Playstation Xbox Nintendo" , 1)
-let thecrew = new Game(16 , "The crew motorfest" , 12 , "course" , "Playstation Xbox" , 1)
+let nfs = new Game(15 , "Need for speed unbound" , 70 , "Course" , "Playstation Xbox Nintendo" , 1)
+let thecrew = new Game(16 , "The crew motorfest" , 12 , "Course" , "Playstation Xbox" , 1)
 let forza3 = new Game(17 , "Forza 3" , 12 , "course" , "Xbox" , 1)
 let thedivision = new Game(18 , "The division 2" , 20 , "Rpg" , "Playstation Xbox Nintendo" , 1)
 
@@ -81,6 +81,15 @@ function add(obj)
     games.push(obj)
 }
 
+//filtre tableau de jeux........................................................................................................................
+
+function filterGame ( btncat )
+{
+    let gamefilter = games.filter((gamecat) => gamecat.plateform.includes(btncat.innerText) || gamecat.cat.includes(btncat.innerText))
+    return gamefilter
+}
+
+
 //fonction card div principal....................................................................................................................
 
 function createCardaddtodiv(game , color)
@@ -93,9 +102,12 @@ function createCardaddtodiv(game , color)
                                         alt="" />
                                     </div>
                                     <div class="p-6">
-                                        <p class="text-base text-neutral-600 dark:text-neutral-200 min-h-20">
-                                        ${game.name}
-                                        </p>
+                                        <div class= " flex justify-between">
+                                            <p class="text-base text-neutral-600 dark:text-neutral-200 min-h-20">
+                                            ${game.name}
+                                            </p>
+                                            <p>${game.plateform}</p>
+                                        </div>
                                         <div class=" flex justify-between">
                                             <div><p>prix : ${game.price}€</p></div>
                                             <button id=${game.id} class="addcart w-24"><img src="img/others/addtocart.png" alt=""></button>
@@ -109,10 +121,7 @@ function createCardaddtodiv(game , color)
 //afficher toutes les card des jeux...................................................................................................
 
 games.forEach(game => { 
-                        let color = "white"
-                        game.plateform == 'Playstation' ? color = 'blue' : 
-                        game.plateform == 'Xbox' ? color = 'green' : 
-                        game.plateform == 'Nintendo' ? color = 'red' : color = 'white'
+                        let color = defineColor(game)
 
                         createCardaddtodiv(game , color)
                         buttonaddtocart = document.querySelectorAll('.addcart')
@@ -126,32 +135,41 @@ function()
 {
     principaldiv.innerHTML = ""
     
-    games.forEach(game => { 
+    if(catBtn.innerHTML == "All")
     {
-        let color = ""
-        if(game.plateform.includes(catBtn.innerText) || game.cat.includes(catBtn.innerText))
+        games.forEach( game => 
         {
-            game.plateform == 'Playstation' ? color = 'blue' : 
-            game.plateform == 'Xbox' ? color = 'green' : 
-            game.plateform == 'Nintendo' ? color = 'red' : color = 'white' 
+            let color = defineColor(game) 
+        
+            createCardaddtodiv(game , color)
+            buttonaddtocart = document.querySelectorAll('.addcart')
+            eventbtnaddcart(buttonaddtocart)
+        })
+    }
+    else
+    {
+        filterGame(catBtn).forEach(game => 
+        {
+            let color = defineColor(game)
             
             createCardaddtodiv(game , color)
             buttonaddtocart = document.querySelectorAll('.addcart')
             eventbtnaddcart(buttonaddtocart)
-        }
-        else if (catBtn.innerText == "All")
-        {
-            game.plateform == 'Playstation' ? color = 'blue' : 
-            game.plateform == 'Xbox' ? color = 'green' : 
-            game.plateform == 'Nintendo' ? color = 'red' : color = 'white' 
-            
-            createCardaddtodiv(game , color)
-            buttonaddtocart = document.querySelectorAll('.addcart')
-            eventbtnaddcart(buttonaddtocart)
-        }
-    }})
+        })
+    }
+     
 }))
 
+//definire couleurs par categories ..........................................................................................................
+
+function defineColor(game)
+{
+    let color = ""
+            game.plateform == 'Playstation' ? color = 'blue' : 
+            game.plateform == 'Xbox' ? color = 'green' : 
+            game.plateform == 'Nintendo' ? color = 'red' : color = 'white'
+    return color
+}
 
 
 //code panier............................................................................................................................................................
@@ -182,6 +200,7 @@ function cartcard(game)
 }
 
 // fonction button add to cart ..............................................................................................................
+
 let cart = []
 
 function eventbtnaddcart(btns)
@@ -285,6 +304,7 @@ function()
     }
     else
     {
+        
         window.alert("**----- VALIDEZ votre panier -----**")
         
         cart.forEach( cartgame => cartgame.quantity = 1)
